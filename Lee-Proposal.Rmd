@@ -5,60 +5,91 @@ author: Sung Lee
 
 ### Data Preparation
 
-```{r setup, echo=TRUE, results='hide', warning=FALSE, message=FALSE}
+```{r setup, echo=TRUE, warning=FALSE, message=FALSE}
 # load data
+library(tidyverse)
+library(psych)
+library(summarytools)
+library(ggplot2)
+
+licenses_df <- read_csv("https://raw.githubusercontent.com/logicalschema/Data606Project/master/License_Applications.csv.gz")
+
+names(licenses_df)<-str_replace_all(names(licenses_df), c(" " = "_"))
+
+head(licenses_df)
+
+names(licenses_df)
 
 ```
+
+
 
 
 ### Research question 
 
 **You should phrase your research question in a way that matches up with the scope of inference your dataset allows for.**
 
+Do economic downturns impact the number of tobacco and liquor license applications in NYC?
 
 
 ### Cases 
 
 **What are the cases, and how many are there?**
 
+There are 368,017 applications and renewals for NYC business licenses in varying license categories from 4/10/98 to 4/16/20. 
 
 
 ### Data collection 
 
 **Describe the method of data collection.**
 
+Data is collected by NYC and recorded on their OpenData platform: https://data.cityofnewyork.us/. This is the original page of the data: https://data.cityofnewyork.us/Business/License-Applications/ptev-4hud/data
 
 
 ### Type of study 
 
 **What type of study is this (observational/experiment)?**
 
-
+This is an observational study.
 
 ### Data Source 
 
 **If you collected the data, state self-collected. If not, provide a citation/link.**
 
+This is the link for the data: https://data.cityofnewyork.us/Business/License-Applications/ptev-4hud
 
+Additional information about the data: https://data.cityofnewyork.us/api/views/ptev-4hud/files/e9ee6ec0-796d-4273-853f-0ccd05920c2f?download=true&filename=DCA%20License%20Applications%20Data%20Dictionary.pdf 
 
 
 ### Dependent Variable
 
 **What is the response variable? Is it quantitative or qualitative?**
 
+The response variable is the *License Category* and it is qualitative.
 
 
 ### Independent Variable
 
 **You should have two independent variables, one quantitative and one qualitative.**
 
-
+The two independent variables are: *Start Date* (quantitative) and *Application or Renewal* (qualitative).
 
 ### Relevant summary statistics 
 
 **Provide summary statistics for each the variables. Also include appropriate visualizations related to your research question (e.g. scatter plot, boxplots, etc). This step requires the use of R, hence a code chunk is provided below. Insert more code chunks as needed.**
 
 ```{r}
+dfSummary(licenses_df$License_Category)
+dfSummary(licenses_df$Start_Date)
+dfSummary(licenses_df$Application_or_Renewal)
+
+
+tobacco <- filter(licenses_df, License_Category == "Tobacco Retail Dealer")
+
+
+formatDate <- strptime(as.character(tobacco$Start_Date),format="%m/%d/%Y")
+hist(formatDate,breaks=10,xlab="year")
+
 
 ```
 
